@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/adedaryorh/ECOMMERCE_APP/database"
 	"github.com/adedaryorh/ECOMMERCE_APP/models"
+	generate "github.com/adedaryorh/ECOMMERCE_APP/tokens"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
@@ -39,6 +40,7 @@ func VerifyPassword(userPassword string, providedPassword string) (bool, string)
 	}
 	return check, msg
 }
+
 func SignUp() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -100,6 +102,7 @@ func SignUp() gin.HandlerFunc {
 		c.JSON(http.StatusCreated, "Successfully Signed Up!!")
 	}
 }
+
 func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -128,6 +131,7 @@ func Login() gin.HandlerFunc {
 			fmt.Println(msg)
 			return
 		}
+
 		token, refreshToken, _ := generate.TokenGenerator(*founduser.Email, *founduser.First_name, *founduser.Last_name, founduser.User_Id)
 		defer cancel()
 		generate.UpdateAllTokens(token, refreshToken, founduser.User_Id)
@@ -220,7 +224,6 @@ func SearchProductByQuery() gin.HandlerFunc {
 			return
 		}
 		defer cancel()
-
 		c.IndentedJSON(200, searchproducts)
 	}
 }

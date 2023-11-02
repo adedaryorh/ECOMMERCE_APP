@@ -40,6 +40,7 @@ type Order struct {
 	Discount       *int               `json:"discount"    bson:"discount"`
 	Payment_Method Payment            `json:"payment_method" bson:"payment_method"`
 }
+
 type Payment struct {
 	Digital bool `json:"digital" bson:"digital"`
 	COD     bool `json:"cod"     bson:"cod"`
@@ -61,6 +62,3 @@ type ProductUser struct {
 	Rating       *uint              `json:"rating" bson:"rating"`
 	Image        *string            `json:"image"  bson:"image"
 }
-
-
-

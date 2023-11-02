@@ -50,6 +50,11 @@ func AddProductToCart(ctx context.Context, prodCollection, userCollection *mongo
 }
 
 func BuyItemFromCart(ctx context.Context, userCollection *mongo.Collection, userID string) error {
+	//fetch cart user
+	//find cart total
+	//create an order with the items
+	//empty cart
+
 	id, err := primitive.ObjectIDFromHex(userID)
 	if err != nil {
 		log.Println(err)
@@ -68,15 +73,18 @@ func BuyItemFromCart(ctx context.Context, userCollection *mongo.Collection, user
 	if err != nil {
 		panic(err)
 	}
+
 	var getusercart []bson.M
 	if err = currentresults.All(ctx, &getusercart); err != nil {
 		panic(err)
 	}
+
 	var total_price int32
 	for _, user_item := range getusercart {
 		price := user_item["total"]
 		total_price = price.(int32)
 	}
+
 	ordercart.Price = int(total_price)
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	update := bson.D{{Key: "$push", Value: bson.D{primitive.E{Key: "orders", Value: ordercart}}}}

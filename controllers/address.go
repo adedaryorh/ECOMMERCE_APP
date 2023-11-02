@@ -15,6 +15,7 @@ import (
 func AddAddress() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user_id := c.Query("id")
+		//check if it's empty
 		if user_id == "" {
 			c.Header("Content-Type", "application/json")
 			c.JSON(http.StatusNotFound, gin.H{"error": "Invalid code"})

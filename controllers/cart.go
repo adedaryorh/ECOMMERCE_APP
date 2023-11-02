@@ -20,6 +20,7 @@ type Application struct {
 }
 
 // This func helps us to initalize Application struct
+
 func NewApplication(prodCollection, userCollection *mongo.Collection) *Application {
 	return &Application{
 		prodCollection: prodCollection,
@@ -97,14 +98,18 @@ func (app *Application) RemoveItem() gin.HandlerFunc {
 }
 func GetItemFromCart() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		//access ID
 		user_id := c.Query("id")
 
+		//check if not by mistake
 		if user_id == "" {
 			c.Header("Content-Type", "application/json")
 			c.JSON(http.StatusNotFound, gin.H{"Error": "Invalid Search index"})
 			c.Abort()
 			return
 		}
+
 		usert_id, _ := primitive.ObjectIDFromHex(user_id)
 
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -118,6 +123,7 @@ func GetItemFromCart() gin.HandlerFunc {
 			c.IndentedJSON(500, "id not found")
 			return
 		}
+
 		//Aggregation Queries or stages
 		filter_match := bson.D{{Key: "$match", Value: bson.D{primitive.E{Key: "_id", Value: usert_id}}}}
 		unwind := bson.D{{Key: "$unwind", Value: bson.D{primitive.E{Key: "path", Value: "$usercart"}}}}
